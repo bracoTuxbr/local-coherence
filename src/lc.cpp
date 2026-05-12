@@ -138,14 +138,15 @@ void lc_destroy(lc_tissue_t* t) {
     if (!t) return;
     if (t->dim == LC_1D) {
         free_hf16(t->s1.d.a); free_hf16(t->s1.d.b);
-        if (t->s1.d.stability) std::free(t->s1.d.stability);
-        if (t->s1.d.dirty) std::free(t->s1.d.dirty);
-        if (t->s1.next_bits) std::free(t->s1.next_bits);
+        // free() accepts NULL (no-op), no guard needed.
+        std::free(t->s1.d.stability);
+        std::free(t->s1.d.dirty);
+        std::free(t->s1.next_bits);
     } else if (t->dim == LC_2D) {
         free_hf2d(t->s2.d.a); free_hf2d(t->s2.d.b);
-        if (t->s2.d.stability) std::free(t->s2.d.stability);
-        if (t->s2.d.dirty) std::free(t->s2.d.dirty);
-        if (t->s2.next_bits) std::free(t->s2.next_bits);
+        std::free(t->s2.d.stability);
+        std::free(t->s2.d.dirty);
+        std::free(t->s2.next_bits);
     }
     std::free(t);
 }
