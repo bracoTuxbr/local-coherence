@@ -22,7 +22,10 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.gridspec import GridSpec
 
-OUT = Path(__file__).resolve().parents[1] / "paper" / "figures" / "hero_readme.png"
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "paper" / "figures" / "hero_readme.png"
+# Pages site is served from /docs and cannot reach ../paper. Mirror image here.
+PAGES_COPY = ROOT / "docs" / "assets" / "hero.png"
 
 
 # --- Numbers from bench_vps_n200.json (Zen 4 EPYC, single thread) ---
@@ -138,8 +141,12 @@ def main():
               ha="center", va="bottom", fontsize=10, color="#555555", style="italic")
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
+    PAGES_COPY.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(OUT, dpi=200, bbox_inches="tight", facecolor="white")
+    import shutil
+    shutil.copyfile(OUT, PAGES_COPY)
     print(f"saved {OUT}")
+    print(f"copy   {PAGES_COPY}")
 
 
 if __name__ == "__main__":
