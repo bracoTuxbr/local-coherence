@@ -1,5 +1,7 @@
 # LC Runtime — Local Coherence
 
+![LC Runtime VAD throughput vs Silero / TEN-VAD on identical hardware](paper/figures/hero_readme.png)
+
 **LC Runtime** is a CPU-native engine for local-propagation inference over a
 continuous tissue of integer cells. **Local Coherence** is the paradigm it
 implements: instead of carrying a model and running it over every input, the
