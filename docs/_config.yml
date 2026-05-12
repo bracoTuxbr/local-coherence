@@ -1,0 +1,23 @@
+title: LC Runtime — Local Coherence
+description: CPU-native inference runtime. The active region pays the cost, not the field. Bit-exact across architectures.
+remote_theme: pages-themes/cayman@v0.2.0
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+
+# show repo button on the header
+show_downloads: false
+
+# point GitHub button at the repo
+github:
+  repository_url: https://github.com/bracoTuxbr/local-coherence
+  repository_nwo: bracoTuxbr/local-coherence
+
+# don't process files outside docs/
+exclude:
+  - "*.cpp"
+  - "*.hpp"
+  - "*.h"
+  - "*.py"
+  - "*.json"
+  - "*.txt"
