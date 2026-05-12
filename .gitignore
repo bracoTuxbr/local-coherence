@@ -1,0 +1,56 @@
+# build artifacts
+build/
+*.exe
+*.obj
+*.o
+*.exp
+*.lib
+*.pdb
+*.ilk
+*.dll
+*.so
+*.dylib
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+env/
+dist/
+*.egg-info/
+
+# editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# downloaded datasets (not source — never commit)
+data/
+datasets/
+*.tar.gz
+*.zip
+*.7z
+
+# generated outputs
+runs/
+results/
+
+# secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# task DB (research workflow leftover, not relevant here)
+.tasks.db*

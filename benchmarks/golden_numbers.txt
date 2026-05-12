@@ -1,0 +1,58 @@
+# Golden numbers — canonical baseline v0 (commit b7d630f / be887c9)
+# Date: 2026-05-07
+# Reference hardware: AMD Ryzen 5 7520U (Zen 2, 4P/8T, 4MB L3, LPDDR5-5500)
+#
+# Format: experiment|metric|canonical_value|tolerance_pct|type
+# type: PERF (performance, varies with hardware) or EXACT (bit-exact, deterministic)
+#
+# Note on PERF on mobile hardware: a laptop without controlled cooling
+# shows significant run-to-run variability (15-30%). PERF values below
+# are medians of >= 3 runs under typical conditions; tolerances are
+# inflated deliberately to avoid flakiness. For a definitive baseline,
+# run on a server with stable cooling and pinned CPU.
+#
+# Note on regime-specific EXACT values: some invariants below
+# (specifically e05 m4_pulse_L1_distance) are cross-architecture
+# deterministic ONLY at CHUNK_CELLS=64. At other CHUNK_CELLS the value
+# changes (but remains cross-architecture deterministic):
+#   CHUNK_CELLS=16  -> L1=185094
+#   CHUNK_CELLS=32  -> L1=107200
+#   CHUNK_CELLS=64  -> L1=94148  (canonical value)
+#   CHUNK_CELLS=128 -> L1=90960
+#   CHUNK_CELLS=256 -> L1=91076
+# Reason: the dirty-vs-naive divergence is an intrinsic property of
+# freeze (frozen cells keep their residual value; the naive kernel
+# decays to 0). CHUNK_CELLS affects when chunks transition to clean,
+# which changes the residual energy left frozen.
+
+e02|m1_1M_tile16K_ns_cell|0.381|10|PERF
+e04|m25_4M_T4_K16_tile4K_ns_cell|0.097|10|PERF
+e05|m4_pulse_speedup|520|25|PERF
+e05|m4_pulse_L1_distance|94148|0|EXACT
+e05|m4_2pulse_L1_distance|188296|0|EXACT
+e09|m7_fft_sine_440_peak_bin|14|0|EXACT
+e09|m7_pipeline_RTF|0.001|50|PERF
+e09|m7_total_RTF|0.0062|50|PERF
+e13|m9_LOO_binary_accuracy|82.9|2|PERF
+e10|m8_shift0_noise_silence_ratio|6.40|10|PERF
+e15|m_minus_2_1d_active_t7|15|0|EXACT
+e15|m_minus_2_2d_active_t4|41|0|EXACT
+e15|m_minus_2_1d_first_touch_k4|4|0|EXACT
+e15|m_minus_2_2d_first_touch_k4|4|0|EXACT
+e16|m_minus_3_gen_stable_60000|510|0|EXACT
+e16|m_minus_3_peak_active|47|0|EXACT
+e16|m_minus_3_peak_r_eff|23|0|EXACT
+e17|roofline_peak_l1_gbs|12.3|15|PERF
+e17|roofline_dram_gbs|10.0|15|PERF
+e21|aos_vs_soa_ratio_16K|4.82|20|PERF
+e21|aos_vs_soa_ratio_4M|6.81|20|PERF
+e22|pad_slope|0.89|10|PERF
+e22|pad_r2|0.99|2|PERF
+e23|adversarial_uniform_amp8_speedup|0.62|30|PERF
+e23|adversarial_uniform_amp32_speedup|0.74|30|PERF
+e24|long_range_kmax_v60000|32|0|EXACT
+e24|long_range_gen_merged_k16|9|0|EXACT
+e25|adaptive_mel_real_max_transitions|1|0|EXACT
+e25|adaptive_mel_real_robust_pct|100|0|EXACT
+e26|lc_adaptive_vs_float_sparse_dram|3.90|25|PERF
+e26|lc_naive_vs_float_uniform_dram|1.24|25|PERF

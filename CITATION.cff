@@ -1,0 +1,60 @@
+cff-version: 1.2.0
+message: "If you use this software or paper, please cite it as below."
+type: software
+title: "Local Coherence: a CPU-native runtime for deterministic local-propagation inference"
+authors:
+  - given-names: Thiago
+    family-names: Alencar
+date-released: 2026-05-12
+license: Apache-2.0
+repository-code: "https://github.com/bracoTuxbr/local-coherence"
+keywords:
+  - cellular automata
+  - stencil computing
+  - lattice Boltzmann method
+  - neural cellular automata
+  - sparse computation
+  - locality
+  - cache optimization
+  - dirty rectangle propagation
+  - CPU-native inference
+  - low-power inference
+  - edge inference
+  - embedded inference
+  - bit-exact
+  - deterministic computing
+  - cross-architecture reproducibility
+  - integer fixed-point
+  - SIMD
+  - bandwidth-bound
+  - roofline model
+  - real-time inference
+  - voice activity detection
+  - VAD
+  - anomaly detection
+  - time-series anomaly
+  - audio activity detection
+  - network telemetry
+  - DDoS detection
+  - intrusion detection
+  - streaming inference
+  - no GPU
+  - x86_64
+  - AMD Zen
+  - differential activity principle
+  - PAD
+abstract: |
+  A CPU-native runtime for deterministic local-propagation inference, based on
+  the Differential Activity Principle (PAD). uint16 fixed-point, bit-exact
+  across architectures, no GPU required. Implementation and experiments were
+  developed in collaboration with Anthropic Claude (Opus 4.6 / 4.7); see
+  AUTHORS.md for the full provenance statement.
+preferred-citation:
+  type: article
+  title: "Local Coherence: an empirical validation of the Differential Activity Principle on a 15-watt mobile CPU"
+  authors:
+    - given-names: Thiago
+      family-names: Alencar
+  year: 2026
+  url: "https://github.com/bracoTuxbr/local-coherence/blob/main/paper/preprint.md"
+  notes: "Implementation and experiments developed with Anthropic Claude (Opus 4.6 / 4.7); see AUTHORS.md for full provenance."
