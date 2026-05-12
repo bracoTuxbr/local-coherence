@@ -5,6 +5,8 @@ description: CPU-native inference runtime. The active region pays the cost, not 
 
 # LC Runtime — Local Coherence
 
+![LC Runtime VAD throughput vs Silero / TEN-VAD on identical hardware](../paper/figures/hero_readme.png)
+
 **LC Runtime** is a CPU-native engine for local-propagation inference over a
 continuous tissue of integer cells. **Local Coherence** is the paradigm it
 implements: instead of carrying a model and running it over every input, the
@@ -14,7 +16,9 @@ event) is a cell that evolves under a fixed local rule. Stable regions are
 
 C99 library, ~5 MB compiled, uint16 fixed-point, deterministic, and
 **bit-exact across architectures** (Zen 2 Windows ↔ Zen 4 Linux, byte for
-byte). No GPU, no PyTorch, no ONNX.
+byte). No GPU, no PyTorch, no ONNX. On a music+speech mix, LC Runtime
+processes **192 K chunks per second** at ROC-AUC 0.82, against 5 K ch/s
+at 0.79 for Silero on the same EPYC Zen 4 (single thread).
 
 [Source on GitHub →](https://github.com/bracoTuxbr/local-coherence) ·
 [Read the paper →](https://github.com/bracoTuxbr/local-coherence/blob/main/paper/preprint.md) ·
