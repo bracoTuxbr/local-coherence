@@ -1,6 +1,6 @@
-# regression_test.ps1 — smoke test contra baseline v0 (golden_numbers.txt)
-# Uso: ./tools/regression_test.ps1 [-Quick]
-# Falha (exit 1) se invariante EXACT quebrar ou PERF sair da tolerancia.
+# regression_test.ps1 — smoke test against baseline v0 (golden_numbers.txt)
+# Usage: ./tools/regression_test.ps1 [-Quick]
+# Fails (exit 1) if any EXACT invariant breaks or any PERF leaves tolerance.
 
 [CmdletBinding()]
 param([switch]$Quick)

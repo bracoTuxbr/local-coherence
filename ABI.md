@@ -322,17 +322,24 @@ suite default.
   Applications requiring this need: continuous source repaint, hierarchical
   multi-level (planned v2), or external decoder.
 
-## Files in this distribution
+## Source files
 
 ```
-include/lc/lc.h              public header
-build/liblc.dll              shared library (Windows)
-build/liblc.a                import library (Windows)
-build/liblc.so               shared library (Linux, when built)
-examples/pulse_1d.c          minimal usage demo
-examples/anomaly_1d.c        sliding-window anomaly detector
-examples/mel_2d.c            2D adaptive demo
+include/lc/lc.h              public C99 API header
+src/                         runtime implementation (15 headers + lc.cpp)
+examples/01_minimal_1d.cpp   Manhattan-diamond growth demo (C++)
+examples/pulse_1d.c          single-pulse propagation in 1D (C)
+examples/anomaly_1d.c        sliding-window anomaly detector (C)
+examples/mel_2d.c            2D propagation demo (C)
+tests/test_core.cpp          19 unit tests / 63 assertions
+benchmarks/                  paper experiment drivers + golden_numbers.txt
+tools/build.ps1              build script (w64devkit / mingw)
+tools/regression_test.ps1    regression gate against golden_numbers.txt
 ABI.md                       this file
 docs/embedding-guide.md      tutorial-level usage guide
-docs/architecture.md         runtime vs application boundary
+docs/architecture.md         runtime / application boundary
 ```
+
+`liblc.dll` (Windows) and `liblc.so` (Linux) are produced under
+`build/` after running `tools/build.ps1`. They are not committed to the
+repository (`build/` is `.gitignored`).
