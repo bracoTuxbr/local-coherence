@@ -36,9 +36,13 @@ extern "C" {
  * with all golden_numbers.txt baselines). */
 typedef enum {
     LC_KERNEL_CANONICAL  = 0,  /* (l + 2c + r) >> 2 * 255/256 — default */
-    LC_KERNEL_SIMPLE_AVG = 1,  /* (l + c + r) / 3 — NO decay */
-    LC_KERNEL_EMA        = 2   /* peso forte centro + decay 254/256 */
+    LC_KERNEL_SIMPLE_AVG = 1,  /* (l + c + r) / 3 — no decay */
+    LC_KERNEL_EMA        = 2   /* centre-weighted + faster decay 254/256 */
 } lc_kernel_id_t;
+/* Note: LC_KERNEL_CANONICAL_U64 mentioned in earlier ABI drafts is an
+ * internal C++ template variant for uint64 tissues; not reachable through
+ * this public uint16-tissue API in v1.2. Will be exposed in v1.3 once the
+ * uint64 tissue lifecycle has dedicated API entry points. */
 
 /* Opaque tissue handle. */
 typedef struct lc_tissue lc_tissue_t;

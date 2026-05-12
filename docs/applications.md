@@ -36,9 +36,12 @@ clear sense of where LC might be the right tool for **your** problem.
   spectrogram-like input (sound, vibration, radio spectrum).
 
 ### Voice Activity Detection on music+speech mix
-- **Result**: LC ROC-AUC 0.86 on Instagram Reels + ESC-50 noise, beating
-  Silero V5 (0.79) and TEN-VAD (0.80). On the same hardware, LC is **30–200×
-  faster** than the ML baselines.
+- **Result**: with the calibrated `simple_avg + steps=8 + sig_delta=1` config,
+  LC reaches ROC-AUC 0.859 on Instagram Reels + ESC-50 noise, vs Silero V5
+  0.788 and TEN-VAD 0.803. The default (`canonical, sig_delta=4`) config
+  scores 0.816, still above both ML models on this dataset. On the same
+  hardware, LC is **16× faster than TEN-VAD and 57× faster than Silero**
+  (13 / 209 / 748 µs per 32 ms chunk on the reference laptop).
 - **Why it works**: ML VADs were trained on clean speech and confuse music
   for speech. LC's magnitude tracking is content-agnostic — speech and music
   both fire the tissue, but the temporal envelope still discriminates.
@@ -62,7 +65,7 @@ clear sense of where LC might be the right tool for **your** problem.
 
 ### Audio activity detection (general "is something happening")
 - **Use**: tracked across M8 (VAD pre-filter for whisper.cpp), M9 (binary
-  classification), and the VAD bench (32 ms chunks, 30K events/sec on laptop).
+  classification), and the VAD bench (32 ms chunks, ~96K chunks/sec on the reference laptop).
 - **Where it transfers**: podcast auto-edit (cut silences), surveillance
   any-sound detection, sports highlights (audio peaks), broadcast
   auto-leveling.

@@ -138,7 +138,7 @@ long-range correlation, use:
   active_count)
 - 2-level hierarchy (planned for v2)
 
-Consult `results-M24.md` for the exact empirical limit.
+See paper §5.2 for the empirical-horizon characterisation.
 
 ### Mixing application logic into the runtime
 
@@ -202,7 +202,7 @@ fprintf(stderr, "Build: %s\n", lc_build_info());
 | C99 public API, opaque tissue handle | shipped in v1.0 (2026-05-08) |
 | Python ctypes wrapper | shipped in v1.1 in [`lcruntime-python`](https://github.com/bracoTuxbr/lcruntime-python) (2026-05-09) |
 | `lc_set_sig_delta` runtime tunable | shipped in v1.1 |
-| `lc_set_kernel` (4 pluggable kernels) | shipped in v1.2 (2026-05-10) |
+| `lc_set_kernel` (3 pluggable kernels on the public uint16 API) | shipped in v1.2 (2026-05-10) |
 | `HotField<T>` for `uint8 / uint16 / uint32` | shipped in v1.2 |
 | Internally-honored multi-thread propagation | not yet |
 | Built-in mmap persistence | not yet |

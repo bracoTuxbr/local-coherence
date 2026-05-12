@@ -92,17 +92,21 @@ size_t lc_active_chunks(const lc_tissue_t* t, size_t* out, size_t max);
 ```
 local-coherence/
 ├── include/lc/lc.h           public C99 API header
-├── src/                      runtime implementation (15 CORE headers + lc.cpp)
-├── benchmarks/               paper experiment drivers (e15 PAD, e16 stabilization, …)
-├── benchmarks/silero_protocol/   VAD evaluation reproducing TEN-VAD's official protocol
-├── apps/                     example applications on public datasets (NAB, VAD, KWS, HAI)
-├── tests/                    19 unit tests / 63 assertions (test_core.cpp)
-├── examples/                 5 small demos (1D minimal, freeze speedup, anomaly, …)
+├── src/                      runtime implementation (15 headers + lc.cpp)
+├── benchmarks/               paper experiment drivers (e02, e15-e20, e25)
+│   ├── golden_numbers.txt    canonical baseline values for regression suite
+│   └── silero_protocol/      VAD evaluation reproducing TEN-VAD's protocol
+├── tests/test_core.cpp       19 unit tests / 64 assertions
+├── examples/                 4 small demos (01_minimal_1d, pulse, anomaly, mel)
 ├── paper/                    preprint.md + 5 figures
-├── docs/                     architecture, paradigm, applications, sprints, milestones
-├── tools/                    build, regression, evaluation utilities
-└── lab/                      golden numbers + walls-audit notes (technical reference)
+├── docs/                     paradigm, architecture, applications, embedding-guide
+├── tools/                    build, regression, utilities
+└── include/                  public headers (lc/lc.h)
 ```
+
+Python applications (NAB anomaly, VAD, KWS, HAI detectors) and the
+ctypes wrapper live in the separate
+[`lcruntime-python`](https://github.com/bracoTuxbr/lcruntime-python) repo.
 
 ## What the runtime guarantees
 

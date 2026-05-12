@@ -90,7 +90,6 @@ inline bool propagate_chunk(const HotField16& prev, HotField16& next,
     bool first_changed = false;
     bool last_changed  = false;
 
-    // EVOLVE-BLOCK-START: propagate_chunk_inner_loop
     for (size_t i = s; i < e; ++i) {
         // if the cell is frozen, we still compute (could be expensive).
         // but: if ALL neighbors are also frozen, the input is stable,
@@ -117,7 +116,6 @@ inline bool propagate_chunk(const HotField16& prev, HotField16& next,
         }
         y[i] = newv;
     }
-    // EVOLVE-BLOCK-END: propagate_chunk_inner_loop
     (void)first_changed; (void)last_changed; // used by caller
     return changed;
 }

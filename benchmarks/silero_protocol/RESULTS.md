@@ -13,7 +13,7 @@
 
 ## Full bench results
 
-### Cross-arch bit-exact (identical ROC-AUC, accuracy, F1):
+### Cross-arch agreement (identical accuracy / F1 / threshold; ROC-AUC matches to 3 decimals):
 
 | Detector | ROC-AUC | acc@0.5 | F1 best | thr | Prec | Rec |
 |---|---|---|---|---|---|---|
@@ -91,12 +91,12 @@ After a sweep of 144 LC configs (kernel × cells × steps × sig_delta) on the 3
 - LC leads on ROC-AUC: +0.07 vs Silero, +0.056 vs TEN
 - LC F1 improved +0.20 vs canonical kernel (0.261 → 0.463)
 - Silero still leads on F1 best (0.648) — more binary distribution
-- LC 57× faster than TEN, 200× faster than Silero (on identical hardware)
+- LC 16× faster than TEN (210 / 13.1 μs/chunk) and 57× faster than Silero (748 / 13.1) on identical hardware
 
 Per-reel ROC-AUC with champion config:
-- C3d0FV2uMBS (music+speech): **1.000** (perfect)
-- DE-dCLNoCyN (speech with pauses): **1.000** (perfect)
-- CsFUZ2eL9hL (clean speech): **0.614** (LC weak spot)
+- reel_A (music+speech): **1.000** (perfect)
+- reel_B (speech with pauses): **1.000** (perfect)
+- reel_C (clean speech): **0.614** (LC weak spot)
 
 ## TEN-VAD addendum
 

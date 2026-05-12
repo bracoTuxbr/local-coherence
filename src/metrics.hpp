@@ -1,4 +1,4 @@
-// metrics.hpp — helpers reusaveis para medir comportamento do paradigma
+// metrics.hpp — reusable helpers to measure paradigm behaviour
 //
 // Nao-CORE. Uso livre em experimentos. Funcoes deterministicas, sem state
 // global. Metricas:
@@ -8,8 +8,8 @@
 //   - run_until_no_change_1d: propaga ate prev == next bit-exact
 //   - propagation_trace_1d: trace de |A(t)| e r_eff(t) por gen (M-4)
 //
-// Para o paradigma, "estavel" tem 3 definicoes possiveis:
-//   1. bitmap dirty completamente zero (definicao do paradigma)
+// For the paradigm, "stable" has three possible definitions:
+//   1. dirty bitmap fully zero (paradigm definition)
 //   2. campo all-zero (estado quente esfriou)
 //   3. prev == next (convergencia bit-exact)
 // Usamos (1) como primaria; (3) como auxiliar.
@@ -72,8 +72,8 @@ struct StableResult {
 };
 
 // Roda ate prev == next bit-exact (definicao 3). Caller fornece prev/next ja
-// inicializados; assume halo zerado externamente em cada gen.
-// Retorna gen em que prev == next (zero gens significa ja estavel inicialmente).
+// initialised; assumes the halo is externally zeroed every generation.
+// Returns the generation at which prev == next (zero gens means already stable initially).
 // Se nao convergir em max_gens, gen_stable = -1.
 inline StableResult run_until_no_change_1d(HotField16& a, HotField16& b,
                                            int max_gens, size_t center)

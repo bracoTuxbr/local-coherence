@@ -4,7 +4,7 @@
 // extern "C" function dispatches based on dimensionality flag set at create.
 // Internal C++ types (HotField16, DirtyTissue, etc) are not exposed.
 
-#include "../../include/lc/lc.h"
+#include "lc/lc.h"
 
 #include "tissue.hpp"
 #include "tissue2d.hpp"
@@ -33,7 +33,7 @@ struct State1D {
     uint64_t* next_bits;
     bool prev_is_a;
     AdaptiveState ad;
-    bool from_external_buffer;  // se true, base nao deve ser free
+    bool from_external_buffer;  // if true, base must not be freed
 };
 
 struct State2D {
@@ -47,7 +47,7 @@ struct State2D {
 
 struct lc_tissue {
     lc_dim_t dim;
-    int n_threads;          // futuro: usado quando MT path
+    int n_threads;          // future: used by MT path
     uint16_t pulse_default;
     lc_kernel_id_t kernel_id;   // ABI 1.2: kernel selection (1D only)
     State1D s1;
@@ -125,11 +125,11 @@ lc_tissue_t* lc_create_from_buffer_1d(const uint16_t* buf, size_t n) {
     lc_tissue_t* t = lc_create_1d(n);
     if (!t) return nullptr;
     // copia conteudo do buf para o tecido (NAO compartilha memoria por
-    // razoes de halo + double-buffer; comportamento documentado em ABI.md)
+    // halo + double-buffer reasons; behaviour documented in ABI.md)
     for (size_t i = 0; i < n; ++i) {
         t->s1.d.a.data[i] = buf[i];
     }
-    // marca tudo dirty para primeiro step processar
+    // mark everything dirty so the first step processes the whole tissue
     std::memset(t->s1.d.dirty, 0xFF, t->s1.d.n_words * sizeof(uint64_t));
     return t;
 }
@@ -210,7 +210,7 @@ void lc_step(lc_tissue_t* t, int n_gens) {
     if (!t || n_gens <= 0) return;
     if (t->dim == LC_1D) {
         // ABI 1.2: dispatch por kernel_id. Default LC_KERNEL_CANONICAL
-        // mantém bit-exact com baselines pré-1.2.
+        // keeps bit-exact parity with pre-1.2 baselines.
         for (int g = 0; g < n_gens; ++g) {
             switch (t->kernel_id) {
                 case LC_KERNEL_SIMPLE_AVG:
@@ -241,7 +241,7 @@ void lc_step(lc_tissue_t* t, int n_gens) {
 void lc_step_adaptive(lc_tissue_t* t, int n_gens) {
     if (!t || n_gens <= 0) return;
     if (t->dim == LC_1D) {
-        // Para 1D, adaptive nao foi implementado no nivel runtime.
+        // 1D adaptive is not implemented at runtime level yet.
         // Fallback para lc_step (dirty puro). Documentado em ABI.md.
         lc_step(t, n_gens);
         return;

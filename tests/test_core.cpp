@@ -1,4 +1,4 @@
-// test_core.cpp — testes unitarios dos componentes core
+// test_core.cpp — unit tests for the core components
 //
 // Sem framework externo. Macros TEST/CHECK simples + contador.
 // Roda em ~1s, exit 0 se todos passam, exit 1 se algum falha.
@@ -98,7 +98,7 @@ TEST(test_alloc_hf16_zero) {
 }
 
 TEST(test_alloc_hf16_overflow) {
-    // tentar alocar tamanho que estoura size_t — deve falhar graceful
+    // allocation size that overflows size_t — must fail gracefully
     auto h = alloc_hf16(SIZE_MAX / 2, 1);
     CHECK(h.base == nullptr, "alloc_hf16 huge size should fail without crash");
 }
@@ -112,7 +112,7 @@ TEST(test_propagate_1d_basic) {
     a.data[-1] = 0; a.data[10] = 0;
     a.data[5] = 1024;
     propagate_1d(a, b);
-    // após 1 gen: regra (l + 2c + r) >> 2 * 255/256
+    // after 1 gen: rule (l + 2c + r) >> 2 * 255/256
     // cell 4: (0 + 0 + 1024) >> 2 = 256, *255/256 = 255
     // cell 5: (0 + 2048 + 0) >> 2 = 512, *255/256 = 510
     // cell 6: idem cell 4 = 255
@@ -135,7 +135,7 @@ TEST(test_propagate_1d_decay_to_zero) {
         propagate_1d(*prev, *next);
         std::swap(prev, next);
     }
-    // após 5000 gens com decay 255/256, deve ser ~0
+    // after 5000 gens with 255/256 decay, the field must be ~0
     bool all_low = true;
     for (size_t i = 0; i < 50; ++i) if (prev->data[i] > 5) { all_low = false; break; }
     CHECK(all_low, "after 5000 gens, all values should decay near zero");
@@ -182,7 +182,7 @@ TEST(test_alloc_dirty_basic) {
     CHECK(d.dirty != nullptr, "dirty bitmap should be allocated");
     CHECK(d.n == 1000, "n should be 1000");
     CHECK(d.n_chunks == (1000 + 63) / 64, "n_chunks should match");
-    // bitmap deve estar todo dirty inicialmente
+    // the bitmap must be fully dirty initially
     CHECK(chunk_is_dirty(d.dirty, 0), "initial bitmap should be all dirty");
     CHECK(chunk_is_dirty(d.dirty, d.n_chunks - 1), "last chunk should be dirty");
     free_dirty(d);
@@ -248,7 +248,7 @@ TEST(test_physical_core_indices) {
 // === main runner ===
 
 int main() {
-    std::fprintf(stderr, "=== test_core: testes unitarios componentes core ===\n\n");
+    std::fprintf(stderr, "=== test_core: unit tests for core components ===\n\n");
 
     RUN_TEST(test_cell_size);
     RUN_TEST(test_alloc_tissue_basic);

@@ -21,7 +21,7 @@ Use `lc_abi_version(int*, int*)` at runtime to detect mismatch.
 |---|---|---|
 | 1.0 | 2026-05-08 | First public surface (16 functions, lifecycle / inject / step / observe) |
 | 1.1 | 2026-05-09 | `lc_set_sig_delta(t, sd)` — runtime-tunable significance threshold; default 4 (preserves all v1.0 EXACT golden numbers). `sig_delta=1` makes the dirty path bit-exact with a naive (no-freeze) reference. |
-| 1.2 | 2026-05-10 | `lc_set_kernel(t, kernel_id)` — pluggable kernel selection at runtime. Four kernels exposed: `LC_KERNEL_CANONICAL` (default, bit-exact baseline), `LC_KERNEL_SIMPLE_AVG`, `LC_KERNEL_EMA`, `LC_KERNEL_CANONICAL_U64` (uint64 variant for hash-collision workloads). Underlying `HotField<T>` generalization to `uint8_t / uint16_t / uint32_t` cell types. |
+| 1.2 | 2026-05-10 | `lc_set_kernel(t, kernel_id)` — pluggable kernel selection at runtime. Three kernels exposed on the public uint16 tissue: `LC_KERNEL_CANONICAL` (default, bit-exact baseline), `LC_KERNEL_SIMPLE_AVG`, `LC_KERNEL_EMA`. Underlying `HotField<T>` generalization to `uint8_t / uint16_t / uint32_t` cell types (internal). A uint64 variant exists as a C++ template (`CanonicalKernel_u64`) but is not yet plumbed through the C API in v1.2; planned for v1.3. |
 
 ## Build artifacts
 
@@ -148,10 +148,9 @@ must be called before the first `lc_step*`.
 
 | `kernel_id` | rule |
 |---|---|
-| `LC_KERNEL_CANONICAL` | `y[i] = ((x[i-1] + 2*x[i] + x[i+1]) >> 2) * 255/256` (default, bit-exact baseline) |
+| `LC_KERNEL_CANONICAL` | `y[i] = ((x[i-1] + 2*x[i] + x[i+1]) >> 2) * 255 / 256` (default, bit-exact baseline) |
 | `LC_KERNEL_SIMPLE_AVG` | `y[i] = (x[i-1] + x[i] + x[i+1]) / 3` (no decay) |
-| `LC_KERNEL_EMA` | `y[i] = ((x[i-1] + 2*x[i] + x[i+1]) >> 2) * 254/256` (faster decay) |
-| `LC_KERNEL_CANONICAL_U64` | uint64-input variant of canonical (for hash-collision counters) |
+| `LC_KERNEL_EMA` | `y[i] = ((x[i-1] + 2*x[i] + x[i+1]) * 254) >> 10` (centre-weighted + faster decay; algebraically close to `((l+2c+r)>>2) * 254/256` but the implementation fuses the shifts and is *not* bit-equal at the LSB for some inputs) |
 
 Switching kernels changes the field evolution and therefore the golden
 numbers — only `LC_KERNEL_CANONICAL` preserves the v1.0 EXACT values.
@@ -331,7 +330,7 @@ examples/01_minimal_1d.cpp   Manhattan-diamond growth demo (C++)
 examples/pulse_1d.c          single-pulse propagation in 1D (C)
 examples/anomaly_1d.c        sliding-window anomaly detector (C)
 examples/mel_2d.c            2D propagation demo (C)
-tests/test_core.cpp          19 unit tests / 63 assertions
+tests/test_core.cpp          19 unit tests / 64 assertions
 benchmarks/                  paper experiment drivers + golden_numbers.txt
 tools/build.ps1              build script (w64devkit / mingw)
 tools/regression_test.ps1    regression gate against golden_numbers.txt

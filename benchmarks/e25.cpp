@@ -140,7 +140,7 @@ int main(int argc, char** argv) {
         "Cl40MstAqMK.wav", "Clg9KJoAa7R.wav", "CptCta8PyUj.wav",
         "CsFUZ2eL9hL.wav"
     };
-    std::string base = "C:/Users/ThiagoAlencar/Documents/IA/coerencia-local/runs/insta_audio/";
+    std::string base = "./runs/insta_audio/";
 
     std::printf("wav,n_frames,duration_s,gens_dirty,gens_naive,gens_probe,transitions,robust\n");
     std::fprintf(stderr,

@@ -67,7 +67,7 @@ for `pip install lcruntime` and idiomatic Python wrapper.
 
 ## Navigate
 
-- [`paper/preprint.md`](paper/preprint.md) — the formal paper (~5000 words, 5 figures, 18 reproducible experiments)
+- [`paper/preprint.md`](paper/preprint.md) — the formal paper (~8000 words, 5 figures, 18 reproducible experiments)
 - [`docs/paradigm.md`](docs/paradigm.md) — paradigm explained in 4 layers (5 words / 1 sentence / 1 paragraph / technical)
 - [`docs/applications.md`](docs/applications.md) — where LC wins, where it loses, **plus untested ideas** worth exploring
 - [`docs/architecture.md`](docs/architecture.md) — runtime / application boundary, public C API, repository layout
@@ -75,8 +75,8 @@ for `pip install lcruntime` and idiomatic Python wrapper.
 - [`ABI.md`](ABI.md) — normative C99 API spec, function by function (pre/post/thread-safety)
 - [`benchmarks/`](benchmarks/) — driver code for paper experiments (e15 PAD, e16 stabilization, e17 roofline, e19 multi-thread)
 - [`benchmarks/silero_protocol/`](benchmarks/silero_protocol/) — VAD bench reproducing TEN-VAD's official protocol
-- [`examples/`](examples/) — short demos (1D minimal, freeze speedup, plus C samples)
-- [`tests/test_core.cpp`](tests/test_core.cpp) — 19 unit tests / 63 assertions
+- [`examples/`](examples/) — short demos (1D minimal C++ + 3 C samples (pulse, anomaly, mel))
+- [`tests/test_core.cpp`](tests/test_core.cpp) — 19 unit tests / 64 assertions
 - [`AUTHORS.md`](AUTHORS.md) — human + AI collaboration provenance
 - [`CHANGELOG.md`](CHANGELOG.md) — release history through ABI 1.2
 

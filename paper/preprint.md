@@ -34,7 +34,7 @@ Combined, these results suggest that for inference workloads with locally-constr
 
 The dominant paradigm for inference workloads — dense matrix multiplication on GPU accelerators with millions of FLOPs per token — incurs energy and capital costs that are unjustified for a large class of problems where the input is locally structured: time series, audio frames, network traffic, log streams. For such problems, computation that touches every cell every step is wasteful. We propose a paradigm where computation is itself local: at each timestep, only cells whose state could change are updated, and stabilized regions ("frozen") are skipped entirely.
 
-This is not new in spirit. Cellular automata (CA) [Wolfram 1983, Conway 1970] embody locality. Stencil computing libraries [Pochoir, Frigo & Strumpen 2005; Halide, Ragan-Kelley et al. 2013] exploit it for performance. Neural cellular automata (NCA) [Mordvintsev et al. 2020] use it for differentiable simulation. Lattice Boltzmann methods [Chen & Doolen 1998] discretize it for fluids. Game engines and GUI toolkits use *dirty rectangle* propagation [Reisinger 1997]. What is new here is **the combination** of: (a) a fixed-point integer kernel suitable for SIMD auto-vectorization; (b) a chunked dirty-bitmap with hysteretic mode switching; (c) tile-blocking in time; (d) a measured, bit-exact validation of the locality principle (`|A(t)|` matches the combinatorial prediction) on a commodity 15 W mobile CPU.
+This is not new in spirit. Cellular automata (CA) [Wolfram 1983, Conway 1970] embody locality. Stencil computing libraries [Pochoir, Frigo & Strumpen 2005; Halide, Ragan-Kelley et al. 2013] exploit it for performance. Neural cellular automata (NCA) [Mordvintsev et al. 2020] use it for differentiable simulation. Lattice Boltzmann methods [Chen & Doolen 1998] discretize it for fluids. Game engines and GUI toolkits use *dirty rectangle* propagation (a folklore technique with no canonical citation; see e.g. the X11 ExposeEvent mechanism and Smalltalk-80 view invalidation). What is new here is **the combination** of: (a) a fixed-point integer kernel suitable for SIMD auto-vectorization; (b) a chunked dirty-bitmap with hysteretic mode switching; (c) tile-blocking in time; (d) a measured, bit-exact validation of the locality principle (`|A(t)|` matches the combinatorial prediction) on a commodity 15 W mobile CPU.
 
 We name this principle the **Differential Activity Principle (PAD)**:
 
@@ -66,7 +66,7 @@ We empirically validate C1 and partially C2 in §5; C3 is left to a companion pa
 
 ### 1.1 Stance: this is engineering, not invention
 
-Each ingredient of LC has prior art, often deep. Our claim is *not* a new algorithm but a new **operating point**: the specific combination, on commodity 15 W mobile hardware, with bit-exact reproducibility infrastructure. We have intentionally not introduced novel mathematics where the existing literature already covers the substrate (Lattice Boltzmann methods [Chen & Doolen 1998], Pochoir [Frigo & Strumpen 2005], NCA [Mordvintsev 2020], dirty rectangles in graphics [Reisinger 1997]). This stance is defensive: we want the paradigm to stand on measurement, not on terminology.
+Each ingredient of LC has prior art, often deep. Our claim is *not* a new algorithm but a new **operating point**: the specific combination, on commodity 15 W mobile hardware, with bit-exact reproducibility infrastructure. We have intentionally not introduced novel mathematics where the existing literature already covers the substrate (Lattice Boltzmann methods [Chen & Doolen 1998], Pochoir [Frigo & Strumpen 2005], NCA [Mordvintsev 2020], dirty rectangles in graphics (folklore, e.g. X11 ExposeEvent / Smalltalk-80 view invalidation)). This stance is defensive: we want the paradigm to stand on measurement, not on terminology.
 
 ### 1.2 Contributions
 
@@ -100,7 +100,7 @@ NCA [Mordvintsev 2020] train a small neural network to be applied locally. The n
 
 ### 2.3 Dirty rectangle propagation
 
-GUI toolkits [Reisinger 1997] and game engines maintain a "dirty list" of regions that need redrawing. The optimization is the same in spirit (skip stable regions). LC formalizes this for compute-heavy inference workloads with chunked bitmaps and mode-switching hysteresis (§3.3).
+GUI toolkits and game engines maintain a "dirty list" of regions that need redrawing. The optimization is the same in spirit (skip stable regions). LC formalizes this for compute-heavy inference workloads with chunked bitmaps and mode-switching hysteresis (§3.3).
 
 ### 2.4 Lattice Boltzmann methods
 
@@ -329,13 +329,24 @@ This has consequences:
 
 `E05` injects a single pulse at the center of a 1 M-cell tissue with all-zero initial state, runs 4000 generations, and compares the dirty + freeze runtime to a naïve dense kernel.
 
-| metric | naïve | dirty+freeze | ratio |
-|---|---:|---:|---:|
-| total ms | 285 | 0.49 | **580×** |
-| ns/cell/gen | 0.07 | 0.0001 | — |
-| L1 distance to ground truth | 94 148 | 94 148 | bit-exact |
+Two snapshots, both 1 M cells × 4 000 generations, same canonical kernel:
 
-Speedup of 520× (median over 5 runs, 25% PERF tolerance) comes from: (i) the active region is `O(t)` for `t ≪ √n`, (ii) frozen tiles outside the active region contribute zero work, (iii) the chunked bitmap fits in L1 (n_chunks = 1024 × 8 B = 8 KB).
+| metric | naïve | dirty + freeze | ratio |
+|---|---:|---:|---:|
+| total ms (M4, controlled run) | 1 915 | 3.06 | **626×** (peak) |
+| total ms (later re-run, laptop, untuned) | 285 | 0.49 | 580× |
+| ns/cell/gen (M4) | 0.48 | 0.00076 | — |
+| L1 distance vs naïve | 94 148 | 94 148 | bit-exact |
+
+The golden number (`benchmarks/golden_numbers.txt`) pins **520× median**
+with a 25 % PERF tolerance, which contains both observations above. The
+spread (520× median, 580× / 626× peaks) is hardware/thermal variability
+on a fanless 15 W laptop, not measurement noise. Bit-exact L1 = 94 148
+across all runs.
+
+The speedup comes from: (i) the active region is `O(t)` for `t ≪ √n`,
+(ii) frozen chunks outside the active region contribute zero work,
+(iii) the chunked bitmap fits in L1 (`n_chunks = 1024 × 8 B = 8 KB`).
 
 ### 5.6 End-to-end audio pipeline (M7–M9)
 
@@ -507,12 +518,15 @@ golden compatibility, but the runtime now exposes both as tunables.
 
 We deployed an experimental detector against the anonymized log sample,
 ranking IPs by activity propagated and decayed through the tissue.
-Against a ground-truth set built from Postfix's own rejection counts,
-the detector achieved 78% precision in its top-100 candidates and 47%
-recall in a single-pass run, at 64,000 events/second. The deployment
-also surfaced a structural observation: existing mail-server defence
-stacks (memcache blocklist + escalation cron, or equivalent) already
-absorb the high-volume side of adversarial traffic. The genuine gap in
+Against a ground-truth set built from the mail-server's own rejection
+counts, a single-pass run produced a candidate IP list at sustained
+event-stream throughput; precision and recall on the top-N candidates
+are reported per-run in the harness logs but are not pinned as golden
+numbers, since they shift with the choice of ground-truth source and
+the time window. The deployment also surfaced a structural observation:
+existing mail-server defence stacks (memcache blocklist + escalation
+cron, or equivalent) already absorb the high-volume side of adversarial
+traffic. The genuine gap in
 such defences is *cross-server slow-burn correlation*: attackers that
 distribute a small number of failed authentications per minute per
 server (below any per-host threshold), but aggregate to a much larger
@@ -728,7 +742,6 @@ e26|lc_naive_vs_float_uniform_dram|1.24|25|PERF
 
 [Williams et al. 2009] Samuel Williams, Andrew Waterman, David Patterson. "Roofline: an insightful visual performance model for multicore architectures." Communications of the ACM 52.4 (2009).
 
-[Reisinger 1997] Joseph Reisinger. "Implementing dirty-region rendering." Computer Graphics Forum 16(3).
 
 [Pohl et al. 2003] Thomas Pohl et al. "Performance evaluation of parallel large-scale lattice Boltzmann applications on three supercomputing architectures." SC 2003.
 

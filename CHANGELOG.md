@@ -283,12 +283,12 @@ public benchmarks.
 
 - Protection system: `tools/regression_test.ps1`, `benchmarks/golden_numbers.txt`,
   unit tests gating bit-exact preservation of every `EXACT` invariant
-- 19 unit tests / 63 assertions in `tests/test_core.cpp`
+- 19 unit tests / 64 assertions in `tests/test_core.cpp`
 - Security review baseline + WAV-loader hardening
 - Hardware-portable PERF tolerances (15–30% drift documented)
 
 ### Paper preprint v0.x
 
-5008-word preprint with 5 figures (PAD 1D, PAD 2D, stabilization,
+~8000-word preprint with 5 figures (PAD 1D, PAD 2D, stabilization,
 roofline, CPU%-vs-time), Appendix A (golden numbers), Appendix B
 (hardware), 12 references. See [`paper/preprint.md`](paper/preprint.md).
