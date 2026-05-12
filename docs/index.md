@@ -5,7 +5,7 @@ description: CPU-native inference runtime. The active region pays the cost, not 
 
 # LC Runtime — Local Coherence
 
-![LC Runtime VAD throughput vs Silero / TEN-VAD on identical hardware](../paper/figures/hero_readme.png)
+![LC Runtime VAD throughput vs Silero / TEN-VAD on identical hardware](assets/hero.png)
 
 **LC Runtime** is a CPU-native engine for local-propagation inference over a
 continuous tissue of integer cells. **Local Coherence** is the paradigm it
